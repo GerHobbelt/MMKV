@@ -1,9 +1,9 @@
 # Uncomment this line to define a global platform for your project
-# platform :ios, '11.0'
+# platform :ios, '9.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
-platform :ios, '11.0'
+platform :ios, '9.0'
 
 #source 'https://git.code.oa.com/guoling/PrivatePodSpec.git'
 
@@ -65,6 +65,9 @@ flutter_ios_podfile_setup
 
 target 'Runner' do
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  # https://github.com/Tencent/MMKV/issues/669
+  # https://blog.cocoapods.org/CocoaPods-1.4.0/
+  script_phase :name => 'Fix MMKV Plugin Name', :script => 'sed -i "" "s/@import mmkv;/@import mmkvflutter;/g" ${SRCROOT}/Runner/GeneratedPluginRegistrant.m', :execution_position=>:before_compile
 end
 
 post_install do |installer|
