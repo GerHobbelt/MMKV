@@ -636,11 +636,15 @@ public class MainActivity extends AppCompatActivity {
 
         mmkv.enableAutoKeyExpire(1);
         mmkv.encode("auto_expire_key_1", true);
-        mmkv.encode("never_expire_key_1", true, 0);
+        mmkv.encode("never_expire_key_1", true, MMKV.ExpireNever);
 
         testAutoExpire(mmkv, false, 1);
         SystemClock.sleep(1000 * 2);
         testAutoExpire(mmkv, true, 1);
+
+        // mmkv.encode("string", "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJFbHFTUjB");
+        // mmkv.clearMemoryCache();
+        // Log.i("MMKV", "space string = " + mmkv.decodeString("string", ""));
 
         if (mmkv.contains("auto_expire_key_1")) {
             Log.e("MMKV", "auto key expiration auto_expire_key_1");
