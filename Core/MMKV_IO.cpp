@@ -52,8 +52,6 @@ using namespace std;
 using namespace mmkv;
 using KVHolderRet_t = std::pair<bool, KeyValueHolder>;
 
-constexpr uint32_t Fixed32Size = pbFixed32Size();
-
 MMKV_NAMESPACE_BEGIN
 
 void MMKV::loadFromFile() {
@@ -1373,7 +1371,7 @@ bool MMKV::disableAutoKeyExpire() {
     checkLoadData();
 
     m_expiredInSeconds = 0;
-    m_enableKeyExipre = NO;
+    m_enableKeyExipre = false;
     if (!m_metaInfo->hasFlag(MMKVMetaInfo::EnableKeyExipre)) {
         return true;
     }
@@ -1383,7 +1381,7 @@ bool MMKV::disableAutoKeyExpire() {
     m_metaInfo->m_version = MMKVVersionFlag;
 
     if (m_file->getFileSize() == DEFAULT_MMAP_SIZE && m_actualSize == 0) {
-        MMKVInfo("file is new, don't need a full writeback [%s], just update meta file", m_mmapID.c_str());
+        MMKVInfo("file is new, don't need a full write-back [%s], just update meta file", m_mmapID.c_str());
         writeActualSize(0, 0, nullptr, IncreaseSequence);
         m_metaFile->msync(MMKV_SYNC);
         return true;
