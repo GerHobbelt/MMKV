@@ -148,8 +148,8 @@ public final class Baseline {
     public void sharedPreferencesBaselineTest() {
         spBatchWriteInt();
         spBatchReadInt();
-        spBatchWrieString();
-        spBatchReadStrinfg();
+        spBatchWriteString();
+        spBatchReadString();
     }
 
     private void spBatchWriteInt() {
@@ -181,7 +181,7 @@ public final class Baseline {
         Log.i(TAG, "SharedPreferences read int: loop[" + m_loops + "]: " + m_formatter.format(endTime) + " ms");
     }
 
-    private void spBatchWrieString() {
+    private void spBatchWriteString() {
         long startTime = System.nanoTime();
 
         SharedPreferences preferences = m_context.getSharedPreferences(MMKV_ID, MODE_PRIVATE);
@@ -197,7 +197,7 @@ public final class Baseline {
         Log.i(TAG, "SharedPreferences write String: loop[" + m_loops + "]: " + m_formatter.format(endTime) + " ms");
     }
 
-    private void spBatchReadStrinfg() {
+    private void spBatchReadString() {
         long startTime = System.nanoTime();
 
         SharedPreferences preferences = m_context.getSharedPreferences(MMKV_ID, MODE_PRIVATE);
