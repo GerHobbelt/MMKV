@@ -1,4 +1,33 @@
 # MMKV for Flutter Change Log
+## v1.3.3 / 2024-01-25
+* Add `removeStorage()` static method to safely delete underlying files of an MMKV instance.
+* Add protection from a potential crash of a multi-process MMKV loading due to the MMKV file not being valid.
+* Add back the lazy load feature. It was first introduced in v1.2.16. But it was rollbacked in v1.3.0 of potential ANR & file corruption. Now it's clear that the bug was caused by something else, it's time to bring it back.
+* **Optimize loading speed** by using shared inter-process lock unless there's a need to truncate the file size, which is rare.
+* Make these two lately added features **more robust**: customizing the initial file size & optimizing write speed when there's only one key inside MMKV.
+* On the Xcode 15 build, an App will crash on iOS 14 and below. Previously we have recommended some workarounds (check the v1.3.2 release note for details). Now you can use Xcode 15.1 to fix this issue.
+
+## v1.3.2 / 2023-11-20
+Among most of the features added in this version, the credit goes to @kaitian521.
+
+* Add the feature of customizing the **initial file size** of an MMKV instance.
+* **Optimize write speed** when there's only one key inside MMKV, the new key is the same as the old one, and MMKV is in `SINGLE_PROCESS_MODE`.
+* **Optimize write speed** by overriding from the beginning of the file instead of append in the back, when there's zero key inside MMKV, and MMKV is in `SINGLE_PROCESS_MODE`.
+* Add the feature of `clearAll()` with keeping file disk space unchanged, **reducing the need to expand file size** on later insert & update operations. This feature is off by default, you will have to call it with relative params or newly added methods. 
+* Add the feature of **comparing values before setting/encoding** on the same key.
+* Fix a potential bug that the MMKV file will be invalid state after a successful expansion but a failure `zeroFill()`, will lead to a crash.
+* Fix a potential crash due to other module/static lib turn-off **RTTI**, which will cause MMKV to fail to catch `std::exception`.
+* Fix several potential crash due to the MMKV file not being valid.
+* Android: Use the `-O2` optimization level by default, which will **reduce native lib size** and improve read/write speed a little bit.
+* Android: Experimantal use `@fastNative` annotation on `enableCompareBeforeCompare()` to speed up JNI call.
+* Turn-off mlock() protection in background on iOS 13+. We have **verified it on WeChat** that the protection is no longer needed from at least iOS 13. Maybe iOS 12 or older is also not needed, but we don't have the chance to verify that because WeChat no longer supports iOS 12.
+
+#### Known Issue
+* On Xcode 15 build, App will crash on iOS 14 and below. The bug is introduced by Apple's new linker. The official solutions provided by Apple are either:
+  * Drop the support of iOS 14.
+  * Add `-Wl,-weak_reference_mismatches,weak` or `-Wl,-ld_classic` options to the `OTHER_LDFLAGS` build setting of Xcode 15. Note that these options are **not recognized** by older versions of Xcode.
+  * Use older versions of Xcode, or **wait for Xcode 15.2**.
+
 ## v1.3.1 / 2023-8-11
 This is a hotfix version. It's **highly recommended** that v1.2.16 & v1.3.0 users upgrade as soon as possible.
 * Fix a critical bug that might cause multi-process MMKV corrupt. This bug was introduced in v1.2.16.
